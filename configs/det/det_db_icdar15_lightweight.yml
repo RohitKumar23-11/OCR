@@ -1,0 +1,75 @@
+Global:
+  use_gpu: true
+  epoch_num: 20
+  log_smooth_window: 20
+  print_batch_step: 10
+  save_model_dir: ./output/det_db/
+  save_epoch_step: 5
+  eval_batch_step: [0,2000]
+  cal_metric_during_train: true
+  pretrained_model: null
+  checkpoints: null
+  use_visualdl: false
+
+Optimizer:
+  name: Adam
+  beta1: 0.9
+  beta2: 0.999
+  lr:
+    name: Cosine
+    learning_rate: 0.001
+
+Architecture:
+  model_type: det
+  algorithm: DB
+  Backbone:
+    name: MobileNetV3
+    scale: 0.5
+    model_name: small
+  Neck:
+    name: DBFPN
+    out_channels: 96
+  Head:
+    name: DBHead
+    k: 50
+
+Loss:
+  name: DBLoss
+
+PostProcess:
+  name: DBPostProcess
+  thresh: 0.3
+  box_thresh: 0.6
+  max_candidates: 1000
+  unclip_ratio: 1.5
+
+Metric:
+  name: DetMetric
+  main_indicator: hmean
+
+Train:
+  dataset:
+    name: SimpleDataSet
+    data_dir: ./train_data/icdar2015/
+    label_file_list: ["./train_data/icdar2015/train_det_gt.txt"]
+    transforms:
+      - DecodeImage: {img_mode: BGR, channel_first: false}
+      - DetLabelEncode: {}
+      - DBNetDecodeImage: {}
+      - RandomCropImgAndGt: {max_tries: 50, min_crop_side_ratio: 0.3}
+      - NormalizeImage: {scale: 1./255., mean: [0.485, 0.456, 0.406], std: [0.229, 0.224, 0.225]}
+      - ToCHWImage: {}
+      - KeepKeys: {keep_keys: ["image", "label", "shape"]}
+
+Eval:
+  dataset:
+    name: SimpleDataSet
+    data_dir: ./train_data/icdar2015/
+    label_file_list: ["./train_data/icdar2015/train_det_gt.txt"]
+    transforms:
+      - DecodeImage: {img_mode: BGR, channel_first: false}
+      - DetLabelEncode: {}
+      - DBNetDecodeImage: {}
+      - NormalizeImage: {scale: 1./255., mean: [0.485, 0.456, 0.406], std: [0.229, 0.224, 0.225]}
+      - ToCHWImage: {}
+      - KeepKeys: {keep_keys: ["image", "label", "shape"]}
