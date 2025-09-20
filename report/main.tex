@@ -1,0 +1,44 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{float}
+\title{PP-OCR End-to-End Study and Training Workflow}
+\author{Prepared by: Rohit Kumar (or your name)}
+\date{\today}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+This document summarizes the PP-OCR family (PP-OCRv3--v5), dataset selection, conversion steps to PP-OCR formats, reproducible training, and experiments producing detection and recognition results.
+\end{abstract}
+
+\section{Architecture overview}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/ppoocr_pipeline.png}
+\caption{PP-OCR pipeline (detector $\rightarrow$ cls $\rightarrow$ recognizer).}
+\end{figure}
+% Add text describing backbones, necks and heads.
+
+\section{Datasets}
+\begin{itemize}
+  \item COCO-Text V2.0: 63,686 images; 239,506 text instances. (mask annotations) \cite{cocotext}
+  \item ICDAR 2019 MLT: multilingual dataset for detection and recognition. \cite{icdar2019}
+  \item Others: LSVT, RCTW-17, MTWI, ShopSign.
+\end{itemize}
+
+\section{Data conversion and preprocessing}
+Add details of conversion scripts and sample snippets.
+
+\section{Training setups and results}
+Include tables of hyperparameters and results (precision/recall/f1, accuracy).
+
+\section{Conclusions and next steps}
+Summarize trade-offs, multilingual findings, and recommended production models (PP-OCRv5 variants).
+
+\bibliographystyle{plain}
+\bibliography{refs}
+\end{document}
